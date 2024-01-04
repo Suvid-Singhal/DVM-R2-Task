@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block body %}
+    <form role="form" action="" method="POST" id="form-map" class="form-map form-search">
+        <h2>Find Trains</h2>
+        {% csrf_token %}
+        {{ form.as_p }}
+            <input type="submit" class="btn btn-success" value="Submit">
+            <input type="reset" class="btn btn-danger" value="Reset">
+    </form>
+    {% if trains %}
+        <table>
+            <th>
+                <td>Train Number</td>
+                <td>Start Time</td>
+                <td>End Time</td>
+                <td>Book Ticket</td>
+            </th>
+            {% for train in trains %}
+                <tr>
+                    <td>{{train.number}}</td>
+                    <td>{{train.start}}</td>
+                    <td>{{train.end}}</td>
+                    <td>
+                        <form action="../book_ticket" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="" />
+                            <input type="submit" name="book" value="Book Now!" class="btn btn-success" />
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    
+    {% endif %}
+{% endblock %}
