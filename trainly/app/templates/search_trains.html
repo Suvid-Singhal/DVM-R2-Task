@@ -21,9 +21,12 @@
                     <td>{{train.start}}</td>
                     <td>{{train.end}}</td>
                     <td>
-                        <form action="../book_ticket" method="post">
+                        <form action="../book_tickets/" method="post">
                             {% csrf_token %}
-                            <input type="hidden" name="" />
+                            <input type="hidden" name="number" value="{{train.number}}" />
+                            <input type="hidden" name="seats" value="{{train.seats}}" />
+                            <input type="hidden" name="class_type" value="{{train.class_type}}" />
+                            <input type="hidden" name="fare" value="{{train.fare}}" />
                             <input type="submit" name="book" value="Book Now!" class="btn btn-success" />
                         </form>
                     </td>

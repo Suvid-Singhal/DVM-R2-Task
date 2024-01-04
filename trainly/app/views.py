@@ -72,7 +72,7 @@ def search_trains(request):
             print(trains)
             results=[]
             for i in trains:
-                results.append({'number':i,'start':models.TrainStops.objects.filter(number_id=int(i),stop=from_station).values()[0]['arrival'],'end':models.TrainStops.objects.filter(number_id=int(i),stop=to_station).values()[0]['arrival']})
+                results.append({'number':i,'start':models.TrainStops.objects.filter(number_id=int(i),stop=from_station).values()[0]['arrival'],'end':models.TrainStops.objects.filter(number_id=int(i),stop=to_station).values()[0]['arrival'],'fare':models.TrainSeats.objects.filter(number_id=int(i),class_type=class_type).values()[0]['fare'],'tickets':seats,'class_type':class_type})
             print(results)
             return render(request,'search_trains.html',{'form':form,'trains':results})
     #print(models.TrainStops.objects.values_list('start_stop').distinct())
@@ -80,5 +80,26 @@ def search_trains(request):
     return render(request,'search_trains.html',{'form':form})
 
 def book_tickets(request):
+    if request.method=='POST':
+        number=request.POST['number']
+        seats=request.POST['seats']
+        class_type=request.POST['class_type']
+        fare=request.POST['fare']
+        print("ok",number,seats,class_type,fare)
+        if float(fare)>request.user.wallet:
+            return HttpResponse("Insufficient Funds!")
+        return HttpResponse("Ticket(s) Booked!")
+    return redirect('home')
 
-    return
+def wallet(request):
+    balance=request.user.wallet
+    if request.method=="POST":
+        form=WalletForm(request.POST)
+        if form.is_valid():
+            amount=request.POST['amount']
+            old_balance=models.CustomUser.objects.get(username=request.user.username)
+            old_balance.wallet=balance+float(amount)
+            old_balance.save()
+            return redirect('wallet')
+    form=WalletForm()
+    return render(request,'wallet.html',{"balance":balance,'form':form})

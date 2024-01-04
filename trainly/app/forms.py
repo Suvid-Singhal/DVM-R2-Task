@@ -20,3 +20,6 @@ class SearchTrainForm(forms.Form):
     date=forms.DateField(widget = forms.SelectDateWidget())
     seats=forms.IntegerField(min_value=1)
     class_type=forms.ModelChoiceField(queryset=models.TrainSeats.objects.values_list('class_type',flat=True).distinct(),widget=forms.Select(attrs={'class': 'form-control'}),empty_label="Select Station",to_field_name="class_type")
+
+class WalletForm(forms.Form):
+    amount=forms.IntegerField(min_value=1)
